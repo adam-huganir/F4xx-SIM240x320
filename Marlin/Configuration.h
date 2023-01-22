@@ -1062,12 +1062,12 @@
 //#define USE_WMAX_PLUG
 
 // Enable pullup for all endstops to prevent a floating state
-//#define ENDSTOPPULLUPS
+// #define ENDSTOPPULLUPS
 #if DISABLED(ENDSTOPPULLUPS)
   // Disable ENDSTOPPULLUPS to set pullups individually
   //#define ENDSTOPPULLUP_XMIN
   //#define ENDSTOPPULLUP_YMIN
-  //#define ENDSTOPPULLUP_ZMIN
+  #define ENDSTOPPULLUP_ZMIN
   //#define ENDSTOPPULLUP_IMIN
   //#define ENDSTOPPULLUP_JMIN
   //#define ENDSTOPPULLUP_KMIN
@@ -1114,11 +1114,11 @@
 // Mechanical endstop with COM to ground and NC to Signal uses "false" here (most common setup).
 #define X_MIN_ENDSTOP_INVERTING true
 #define Y_MIN_ENDSTOP_INVERTING true
-#define Z_MIN_ENDSTOP_INVERTING true
+#define Z_MIN_ENDSTOP_INVERTING false
 #define X_MAX_ENDSTOP_INVERTING true
 #define Y_MAX_ENDSTOP_INVERTING true
 #define Z_MAX_ENDSTOP_INVERTING true
-#define Z_MIN_PROBE_ENDSTOP_INVERTING true
+#define Z_MIN_PROBE_ENDSTOP_INVERTING false
 #define I_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define J_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define K_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
@@ -1298,6 +1298,7 @@
 && TRONXY_PROJ != PROJ_VEHO800_2E
 #define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN
 #endif
+#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN
 // Force the use of the probe for Z-axis homing
 //#define USE_PROBE_FOR_Z_HOMING
 
@@ -1353,7 +1354,7 @@
 /**
  * The BLTouch probe uses a Hall effect sensor and emulates a servo.
  */
-//#define BLTOUCH
+#define BLTOUCH
 
 /**
  * MagLev V4 probe by MDD
@@ -1913,6 +1914,8 @@
  */
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
+#define AUTO_BED_LEVELING_BILINEAR
+
 #if ENABLED(FIX_MOUNTED_PROBE)
 #define AUTO_BED_LEVELING_BILINEAR
 #endif
@@ -2057,7 +2060,7 @@
  * Add a bed leveling sub-menu for ABL or MBL.
  * Include a guided procedure if manual probing is enabled.
  */
-//#define LCD_BED_LEVELING
+#define LCD_BED_LEVELING
 
 #if ENABLED(LCD_BED_LEVELING)
   #define MESH_EDIT_Z_STEP  0.025 // (mm) Step size while manually probing Z axis.
@@ -2137,6 +2140,7 @@
 && TRONXY_PROJ != PROJ_TAONI
 #define Z_SAFE_HOMING
 #endif
+#define Z_SAFE_HOMING
 
 #if ENABLED(Z_SAFE_HOMING)
   #define Z_SAFE_HOMING_X_POINT X_CENTER  // X point for Z homing
