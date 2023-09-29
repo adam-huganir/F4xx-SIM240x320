@@ -11,9 +11,19 @@ def output_target():
     tar_bin = "update/fmw_tronxy.bin"
     env.AddPostAction(
         "$BUILD_DIR/${PROGNAME}.elf",
-        env.VerboseAction(" ".join([
-            "$OBJCOPY", "-O", "binary", "-R", ".eeprom",
-            "$BUILD_DIR/${PROGNAME}.elf", tar_bin
-        ]), "Building %s" % tar_bin)
+        env.VerboseAction(
+            " ".join(
+                [
+                    "$OBJCOPY",
+                    "-O",
+                    "binary",
+                    "-R",
+                    ".eeprom",
+                    "$BUILD_DIR/${PROGNAME}.elf",
+                    tar_bin,
+                ]
+            ),
+            f"Building {tar_bin}",
+        ),
     )
 output_target()

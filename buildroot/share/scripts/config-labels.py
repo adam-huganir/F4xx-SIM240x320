@@ -39,10 +39,10 @@ output_examples_dir = r'config/examples'
 files_to_mod = ['Configuration.h', 'Configuration_adv.h', '_Bootscreen.h', '_Statusscreen.h']
 
 macro_name     = 'CONFIG_EXAMPLES_DIR'
-def_macro_name = '#define ' + macro_name
+def_macro_name = f'#define {macro_name}'
 
 filenum = 0
-different_out_dir = not (output_examples_dir == input_examples_dir)
+different_out_dir = output_examples_dir != input_examples_dir
 
 #----------------------------------------------
 def process_file(subdir: str, filename: str):
@@ -50,9 +50,9 @@ def process_file(subdir: str, filename: str):
 	global filenum
 	filenum += 1
 
-	print(str(filenum) + '  ' + filename + ':  ' + subdir)
+	print(f'{filenum}  {filename}:  {subdir}')
 
-	def_line = (def_macro_name + ' "'  + subdir.replace('\\', '/')  + '"')
+	def_line = f'{def_macro_name} "' + subdir.replace('\\', '/') + '"'
 
 	#------------------------
 	# Read file
@@ -65,7 +65,7 @@ def process_file(subdir: str, filename: str):
 			lines = infile.readlines()
 
 	except Exception as e:
-		print('Failed to read file: ' + str(e) )
+		print(f'Failed to read file: {str(e)}')
 		raise Exception
 
 	lines = [line.rstrip('\r\n') for line in lines]
@@ -97,14 +97,11 @@ def process_file(subdir: str, filename: str):
 				pass
 			elif (def_macro_name in line):
 				region = 1
-				if line == def_line:   # leave it as is
-					pass
-				else:
+				if line != def_line:
 					outline       = def_line
 					file_modified = True
 			else: # some other string
-				outlines.append(def_line)
-				outlines.append('')
+				outlines.extend((def_line, ''))
 				region = 1
 				file_modified = True
 
@@ -112,9 +109,6 @@ def process_file(subdir: str, filename: str):
 			if (def_macro_name in line):
 				outline       = None
 				file_modified = True
-			else:
-				pass
-
 		# end if
 		if outline is not None:
 			outlines.append(outline)
@@ -130,17 +124,17 @@ def process_file(subdir: str, filename: str):
 		# Note: no need to create output dirs, as the initial copy_tree
 		# will do that.
 
-		print('  writing ' + outfilepath)
+		print(f'  writing {outfilepath}')
 		try:
 			# Preserve unicode chars; Avoid CR-LF on Windows.
 			with outfilepath.open("w", encoding="utf-8", newline='\n') as outfile:
 				outfile.write("\n".join(outlines) + "\n")
 
 		except Exception as e:
-			print('Failed to write file: ' + str(e) )
+			print(f'Failed to write file: {str(e)}')
 			raise Exception
 	else:
-		print('  no change for ' + outfilepath)
+		print(f'  no change for {outfilepath}')
 
 #----------
 def main():
@@ -160,7 +154,7 @@ def main():
 
 	for dir in (input_examples_dir, output_examples_dir):
 		if not Path(dir).exists():
-			print('Directory not found: ' + dir)
+			print(f'Directory not found: {dir}')
 			sys.exit(1)
 
 	#--------------------------------
@@ -170,11 +164,11 @@ def main():
 	# insertion of the define statement.
 	#
 	if different_out_dir:
-		print('Copying files to new directory: ' + output_examples_dir)
+		print(f'Copying files to new directory: {output_examples_dir}')
 		try:
 			copy_tree(input_examples_dir, output_examples_dir)
 		except Exception as e:
-			print('Failed to copy directory: ' + str(e) )
+			print(f'Failed to copy directory: {str(e)}')
 			raise Exception
 
 	#-----------------------------

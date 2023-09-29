@@ -63,7 +63,7 @@ def apply_opt(name, val, conf=None):
 
 		# Add the provided value after the name
 		if val != "on" and val != "" and val is not None:
-			added += " " + val
+			added += f" {val}"
 
 		# Prepend the new option after the first set of #define lines
 		fullpath = config_path("Configuration.h")
@@ -92,7 +92,7 @@ def fetch_example(path):
 
 	url = path.replace("%", "%25").replace(" ", "%20")
 	if not path.startswith('http'):
-		url = "https://raw.githubusercontent.com/MarlinFirmware/Configurations/bugfix-2.1.x/config/%s" % url
+		url = f"https://raw.githubusercontent.com/MarlinFirmware/Configurations/bugfix-2.1.x/config/{url}"
 
 	# Find a suitable fetch command
 	if shutil.which("curl") is not None:
@@ -112,7 +112,7 @@ def fetch_example(path):
 
 	# Try to fetch the remote files
 	for fn in ("Configuration.h", "Configuration_adv.h", "_Bootscreen.h", "_Statusscreen.h"):
-		if os.system("%s wgot %s/%s >/dev/null 2>&1" % (fetch, url, fn)) == 0:
+		if os.system(f"{fetch} wgot {url}/{fn} >/dev/null 2>&1") == 0:
 			shutil.move('wgot', config_path(fn))
 			gotfile = True
 
@@ -145,7 +145,7 @@ def apply_all_sections(cp):
 
 # Apply certain config sections from a parsed file
 def apply_sections(cp, ckey='all', addbase=False):
-	blab("[config] apply section key: %s" % ckey)
+	blab(f"[config] apply section key: {ckey}")
 	if ckey == 'all':
 		apply_all_sections(cp)
 	else:
@@ -189,18 +189,15 @@ def apply_config_ini(cp):
 			other_ini.read(config_path(ckey))
 			apply_sections(other_ini, sect)
 
-		# (Allow 'example/' as a shortcut for 'examples/')
 		elif ckey.startswith('example/'):
-			ckey = 'examples' + ckey[7:]
+			ckey = f'examples{ckey[7:]}'
 
-		# For 'examples/<path>' fetch an example set from GitHub.
-		# For https?:// do a direct fetch of the URL.
 		elif ckey.startswith('examples/') or ckey.startswith('http'):
 			addbase = True
 			fetch_example(ckey)
 
 		# Apply keyed sections after external files are done
-		apply_sections(cp, 'config:' + ckey, addbase)
+		apply_sections(cp, f'config:{ckey}', addbase)
 
 if __name__ == "__main__":
 	#
@@ -212,7 +209,7 @@ if __name__ == "__main__":
 		if args[0].endswith('.ini'):
 			ini_file = args[0]
 		else:
-			print("Usage: %s <.ini file>" % sys.argv[0])
+			print(f"Usage: {sys.argv[0]} <.ini file>")
 	else:
 		ini_file = config_path('config.ini')
 
